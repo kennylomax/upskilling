@@ -1,0 +1,329 @@
+<div cdkDropListGroup (keydown)="onKeydown( $event)" (keyup)="onKeyup($event)">
+	<table  width=100%  *ngIf="testing" >
+    <tr valign="top">
+      <td style="color:white; background-color:red;" >
+        <h1 >YOU ARE IN TESTING MODE</h1>
+        This application is now in testing mode.  In testing mode, you can freely test the app:  add/modify/delete  material and paths and try to break it.
+        Please report errors/problems to me @ ken.lomax@sap.com<br><br>
+        Tips for testing: there are 2 options the user can select: ReadOnly and Contribute.<br>
+        In Readonly, users should be able to scan the material and paths, and (un)like material.<br>
+        In Contribute, users should be able to add/modify/delete material and paths, add/remove tags, recommenders, types to material and (un)like material
+      </td>
+    </tr></table>
+
+    <table (keydown)="onKeydown( $event)" (keyup)="onKeyup( $event)" width=100%>
+      <tr valign="top">
+        <td  width=60% nowrap>
+          <h1>Crowdsourcing material for Upskilling in SAP CX & Munich Labs</h1>
+          Mastering our Cloud Landscape is hard - but we can make it easier by sharing our favourite upskilling material and jouneys with each other. Here we can: <ul>
+          <li>crowd source our favourite upskilling videos/sites/channels, </li>
+          <li>like (or not) the material that others have shared, </li>
+          <li>construct and share optimal learning paths from that material,</li>
+          <li>iteratively shape an optimized source for upskilling into our cloud landscape.</li>
+          </ul>
+          Feel free to add your favourite upskilling material, and help shape the best learning paths for our colleagues.
+        </td>
+        <td>
+        </td>
+        <td nowrap valign=top align=right>
+          <img height=50px src="assets/images/sap.jpeg"> <img src="assets/images/cx.png"><br>
+          <button class="tooltip" (click)="copyToClipboard()" >Copy deeplink to clipboard
+            <span class="tooltiptext">Get (and share) a URL with your current selections</span>
+          </button> <br>(v0.82)  <a target="_blank" href="https://cxwiki.sap.com/display/prodandtech/Software+Academy+2021+Filling+our+Skills+Gaps">More about this</a>
+          </td>
+      </tr>
+
+</table>
+
+
+  <hr  style="height:1px; color:rgb(209, 209, 209);">
+  <table>
+		<tr valign=top>
+			<td width=60%> <h3>Crowdsourced Material
+
+           <input id=search name=search [(ngModel)]="searchTerm" placeholder="searchTerm" (keyup)="toggleMe(null)"  />
+
+           <img *ngIf="!stepBeingEditted" (click)="editting=true" (mouseup)="addStepClicked()" src="assets/images/add.png"  height=30 >
+        </h3>
+				<table>
+					<tr valign=top>
+						<td valign=top>
+              Filters:
+							<span id="clearAll"><u *ngIf="numChosenButtons>0||( searchTerm!=null && searchTerm.length>0) " role="button" (click)="clearAll()">Clear all</u></span><br>
+              Branches:
+							<br>
+							<div style="height:300px;width:240px;border:0px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;"> <code class="tags" *ngFor="let tree of treesArray"><button name="{{ tree }}" class="" (click)="toggleMe($event)">{{casify(tree)}}</button><br></code> </div>
+						</td>
+						<td align=middle valign=top>
+							<table width=800px>
+								<tr>
+									<td valign=top>
+										<table>
+											<tr><td>
+                          Click an icon to visit/edit it.  <img (click)="listlayout=!listlayout" height=30px src="assets/images/lists.png">
+													<div style="height:300px;border:0px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;"
+                            cdkDropList
+                            id=stepPool #stepPool="cdkDropList"
+                            cdkDropListDisabled="{{ !edittingPaths}}"
+                           (cdkDropListDropped)="dropStep($event)"
+                           [cdkDropListData]="steps"
+                           >
+                            <span *ngFor="let step of steps" >
+                              <code
+                                cdkDrag
+                                [cdkDragData]="step"
+                                (cdkDragStarted)="started($event)"
+                                (cdkDragDropped)="stopped($event)"
+                                >
+                                <img  tabindex="0"
+                                id="img{{step.uid}}"
+                                class="normal"
+                                (mouseenter)='onSelect(step.uid, i, step.Tags+" "+step.Type+" " +step.Tree+" " +step.Recommender, false)'
+                                (click)='onSelect(step.uid, i, step.Tags+" "+step.Type+" " +step.Tree+" " +step.Recommender, true)'
+                                (mouseout)='clearButtons()' name="{{ step.Tags }} {{ step.Type }} {{ step.Tree }}  {{ step.Title }}  {{ step.Recommender }}"
+                                alt='refreshPage' src="{{step.Thumb?step.Thumb:'assets/images/gray.png'}}"
+                                width=30 height=30>
+                            </code>
+                            <text *ngIf=listlayout
+                            (mouseenter)='onSelect(step.uid, i, step.Tags+" "+step.Type+" " +step.Tree+" " +step.Recommender, false)'
+                            (click)='onSelect(step.uid, i, step.Tags+" "+step.Type+" " +step.Tree+" " +step.Recommender, true)'
+                            (mouseout)='clearButtons()' name="{{ step.Tags }} {{ step.Type }} {{ step.Tree }}  {{ step.Title }}  {{ step.Recommender }}">
+                            {{ step.Title }}<br></text>
+                            </span>
+                          </div>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+
+						</td>
+						<td width=40%>
+
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan=3 valign=top>Tags: <code class="tags" *ngFor="let tag of tagsArray"><button name="{{ tag }}" class="" (click)="toggleMe($event)"> {{ tag }}</button></code></td>
+					</tr>
+					<tr>
+						<td colspan=3 valign=top>Types: <code class="tags" *ngFor="let type of typesArray"><button name="{{ type }}" class="" (click)="toggleMe($event)"> {{ type }}</button> </code></td>
+					</tr>
+					<tr>
+						<td colspan=3 valign=top>Recommenders: <code class="tags" *ngFor="let recommender of recommendersArray"><button name="{{ recommender }}" class="" (click)="toggleMe($event)"> {{ recommender }}</button> </code></td>
+					</tr>
+				</table>
+			</td>
+      <td valign=top>
+       <table>
+        <tr valign=top>
+          <td *ngIf="editting">
+            <text *ngIf="addingStep">Give the URL of new material, then provide more details.<br></text>
+            <input *ngIf="addingStep" id=newMaterial size="30" (keydown)="newMaterialKeyDown($event)" [(ngModel)]="newMaterialUrl" placeholder="https://" >
+            <img *ngIf="addingStep"  alt="Add"  (click)=" prepareNewStep()" src="assets/images/add.png"  height=30 >&nbsp;
+            <img  *ngIf="addingStep"  id="undo" alt="Cancel"  (click)="cancel()" src="assets/images/undo.png"  height=30 >&nbsp;
+           </td>
+        </tr>
+        <tr>
+          <td style="color:red;" colspan=2 *ngIf="feedback.length>0">
+           <span *ngFor="let fb of feedback" >{{fb}}<br></span>
+          </td>
+        </tr>
+
+        <tr *ngIf="selectedStep">
+          <td>
+            <table>
+              <tr nowrap  >
+                <td colspan=3>
+                  <h3>
+                    <img id="undo" *ngIf="!editting && stepBeingEditted" (click)="cancel()" src="assets/images/undo.png"  height=30 >
+                    <img *ngIf="stepBeingEditted && !editting" (click)="editting=true"  src="assets/images/edit.png"  class="tooltip"  height=30 >
+                    <img *ngIf="editting"  alt="Save" (click)="save()" src="assets/images/save2.png"  height=30 >
+                    <img *ngIf="editting &&  !addingStep" alt="Delete" (click)="deleteStep()" src="assets/images/bin.png"  height=30 >
+                    <img  id="undo"  *ngIf="editting" alt="Readonly mode"  (click)="cancel()"  src="assets/images/undo.png"  height=30 >
+                    {{selectedStep.Title.substring(0,80)}}</h3>
+                </td>
+              </tr>
+              <tr nowrap *ngIf="!editting" >
+                <td valign=top nowrap>
+                  <a  target="_blank" href="{{ selectedStep.Url }}"><img *ngIf="!selectedStep.Thumb"  alt=largeThumb  class="" src="assets/images/gray.png"  style="max-width: 100px;max-height: 100px;" /></a>
+                  <a  target="_blank" href="{{ selectedStep.Url }}"><img *ngIf="selectedStep.Thumb"  alt=largeThumb  class="" src="{{selectedStep.Thumb }}"  style="max-width: 100px;max-height: 100px;" /></a>
+                 </td>
+                <td valign=top align=left>
+                  <img src="assets/images/up2.png"  (click)="like()" width=50 height=50> {{selectedStep.NumLikes}}
+                </td>
+                <td><img src="assets/images/white.png" height="100px"></td>
+              </tr>
+
+              <tr *ngIf="editting">
+                <td  *ngIf="editting">Title<sup>*</sup>:  </td>
+                <td colspan=2 nowrap  *ngIf="editting">
+                  <input (keyup)="editted( $event)" id=Title maxlength="200" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Title" placeholder="Title" /> <br>
+                </td>
+              </tr>
+
+              <tr>
+                <td> Tag(s)<sup *ngIf="editting">(1)</sup>: </td>
+                <td colspan=2 >
+                  <input  *ngIf="editting" (keyup)="editted( $event)" maxlength="200" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Tags" placeholder="Tags" />
+                  <div  *ngIf="!editting"> {{selectedStep.Tags}}
+                    <!--code class="tags" *ngFor="let tag of selectedStep.Tags.split(' ')"><button name="{{ tag }}" class="" (click)="toggleMe($event)"> {{ tag }}</button></code-->
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td > Branch: </td>
+                <td colspan=2 >
+                  <input *ngIf="editting" (keyup)="editted( $event)" maxlength="200" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Tree" placeholder="Branch/Twig/Leaf" />
+                  <div  *ngIf="!editting"> {{selectedStep.Tree}}</div>
+                </td>
+              </tr>
+
+              <tr>
+                <td> <a class="align-top" target="_blank" href="{{ selectedStep.Url }}">URL</a><sup>*</sup>:</td>
+                <td colspan=2 >
+                  <input *ngIf="editting" (keyup)="editted( $event)" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Url" placeholder="Url" />
+                  <div  *ngIf="!editting"> <a class="align-top" target="_blank" href="{{ selectedStep.Url }}">{{ selectedStep.Url }}</a> </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td> Type(s)<sup *ngIf="editting">(1)</sup>: </td>
+                <td colspan=2 >
+                  <input *ngIf="editting"  (keyup)="editted( $event)" maxlength="200" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Type" placeholder="Type" />
+                  <div  *ngIf="!editting"> {{selectedStep.Type}}</div>
+                </td>
+              </tr>
+
+              <tr>
+                <td nowrap > Recommender(s)<sup *ngIf="editting">(1)</sup>: </td>
+                <td colspan=2 >
+                  <input *ngIf="editting"  (keyup)="editted( $event)" maxlength="200" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Recommender" placeholder="Type" />
+                  <div  *ngIf="!editting"> {{selectedStep.Recommender}}</div>
+                </td>
+              </tr>
+
+              <tr>
+                <td valign=top> Description: </td>
+                <td colspan=2 >
+                  <textarea  style="border:solid 1px;"  *ngIf="editting" (keyup)="editted( $event)" maxlength="500" [attr.disabled]="!editting ? '': null" rows="4" cols="50" [(ngModel)]="selectedStep.Description" placeholder="Max 500 Chars"></textarea>
+                  <div  *ngIf="!editting"> {{selectedStep.Description}}</div>
+                </td>
+              </tr>
+              <tr  *ngIf="editting">
+                <td> Thumb: </td>
+                <td colspan=2 >
+                  <table><tr height=120px><td>
+                    <code *ngIf="selectedStep">
+                      <div cdkDropList  id=stepPool2 #stepPool2="cdkDropList" (cdkDropListDropped)="dropStep($event)" cdkDropListDisabled="{{!editting}}">
+                        <code *ngFor="let step of [selectedStep]" cdkDrag [cdkDragData]="step" (cdkDragStarted)="started($event)" (cdkDragEnded)="stopped($event)">
+                          <a class="align-top"  target="_blank" href="{{ selectedStep.Url }}"><img *ngIf="!selectedStep.Thumb"  alt=largeThumb  class="" src="assets/images/gray.png"  style="max-width: 100px;max-height: 100px;" /></a>
+                          <a class="align-top"  target="_blank" href="{{ selectedStep.Url }}"><img *ngIf="selectedStep.Thumb"  alt=largeThumb  class="" src="{{selectedStep.Thumb }}"  style="max-width: 100px;max-height: 100px;" /></a>
+                        </code>
+                        </div>
+                    </code>
+                    <td *ngIf="selectedStep.uid!=null && selectedStep.uid.length>0">
+                      <ngx-file-drop *ngIf="editting" dropZoneLabel="Drop image here" (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                      <button type="button" (click)="browseThumb();openFileSelector();">Browse Thumb Image</button>
+                      </ng-template>
+                  </ngx-file-drop>
+                </td>
+                <td *ngIf="selectedStep.uid==null|| selectedStep.uid.length==0">
+                  Click Save before altering Thumb  image.
+                </td>
+
+              </tr></table>
+                <!--input maxlength="200" disabled size="50" [(ngModel)]="selectedStep.Thumb" placeholder="Thumb" /-->
+                </td>
+              </tr>
+
+              <tr *ngIf="editting" ><td  colspan=3>
+                  <sup>(1)</sup> Space-separated list. These will appear as selectable facets.
+
+                </td>
+              </tr>
+
+
+              <tr><td colspan=3><br>( Last modified: {{ dateOfSelectedStep}} <span  *ngIf="selectedStep.ip">by {{selectedStep.ip}} </span>)</td></tr>
+            </table>
+          </td>
+        </tr>
+       </table>
+      </td>
+		</tr>
+	</table>
+
+  <hr  style="height:1px; color:rgb(209, 209, 209);">
+<table (keydown)="onKeydown( $event)" (keyup)="onKeyup( $event)" width=100%>
+  <tr valign=top>
+    <td width=100%> <h3>Crowdsourced Paths (from material above)
+      <img *ngIf="!edittingPaths" (click)="edittingPaths=true" src="assets/images/edit.png"  height=30 >
+        <img *ngIf="edittingPaths" alt="Add"  (click)="newPath()" src="assets/images/add.png"  height=30 >
+        <img  *ngIf="edittingPaths" alt="Add"  (click)="savePaths()" src="assets/images/save2.png"  height=30 >
+       <img  *ngIf="edittingPaths" alt="Readonly"  (click)="edittingPaths=false"  src="assets/images/undo.png"  height=30 >
+        </h3>
+      <table>
+        <tr *ngIf="edittingPaths">
+          <td>
+<br>
+            To remove material from a path, drag the material, <span [ngStyle]="{ 'border': edittingPaths ? '1px solid black':''}">
+            <text style="background-color:#c5c5c5" cdkDropListOrientation="horizontal" cdkDropList id=binPool cdkDropListDisabled="{{!edittingPaths}}" (cdkDropListDropped)="dropStep($event)"> into this box </text></span>
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="color:red;"  *ngIf="feedbackPaths.length>0">
+           <span *ngFor="let fb of feedbackPaths" >{{fb}}<br></span>
+          </td>
+        </tr>
+        <tr>
+        <tr>
+          <td>
+            <table><tr *ngFor="let i=index; let p of paths">
+              <td>
+                <input *ngIf="edittingPaths" size="50" [(ngModel)]="p.Title">
+                <img *ngIf="edittingPaths"  alt="Delete Path" (click)="deletePath(p.uid)" src="assets/images/bin.png"  height=30 >
+                <code *ngIf="!edittingPaths " ><b>{{p.Title}}</b> </code>
+              </td>
+              <td>
+                <span  nowrap valign=top>
+                  <code height=100% valign=bottom cdkDropListOrientation="horizontal"
+                    cdkDropList
+                     id=pathPool{{i}}
+                    cdkDropListDisabled="{{!edittingPaths}}"
+                   (cdkDropListDropped)="dropStep($event)"
+                   [cdkDropListData]="p.StepIds"
+                   >
+                    <text *ngIf="edittingPaths">Drag material ->here<- to add to this path, then reorder it. </text>
+                    <text *ngFor="let stepId of p.StepIds" >
+                      <code
+                      cdkDrag
+                      [cdkDragData]="stepsMap.get(stepId)"
+                      (cdkDragStarted)="started($event)"
+                      (cdkDragDropped)="stopped($event)">
+                         <img valign=bottom
+                         (mouseenter)="onSelect(stepId, -1, '', false)"  src="{{stepsMap.get(stepId)?stepsMap.get(stepId).Thumb:'assets/images/gray.png'}}"
+                         (click)='onSelect(stepId, i, stepsMap.get(stepId).Tags+" "+stepsMap.get(stepId).Type+" " +stepsMap.get(stepId).Tree+" " +stepsMap.get(stepId).Recommender, true)'
+                         width=30 height=30>
+                      </code>
+                    </text>
+
+              </code>
+              </span>
+              </td>
+            </tr></table>
+
+          </td>
+        </tr>
+
+      </table>
+      </td>
+  </tr>
+</table>
+
+  <p>Questions/feedback? Contact ken.lomax@sap.com</p>
+</div>
+
+

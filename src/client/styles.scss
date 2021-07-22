@@ -1,0 +1,248 @@
+
+
+.img-opaque {-webkit-filter: opacity(0.05);-moz-filter: opacity(0.05);-o-filter: opacity(0.05);-ms-filter: opacity(0.05);filter: opacity(0.05)}
+
+
+img{
+  border:outset;
+  border-color: transparent;
+  border: solid 3px white;
+}
+img:hover {
+  border: solid 3px red;
+  //margin: -2px;
+}
+
+.cdk-drop-list-dragging {
+
+}
+.highlight {
+  border: solid 3px red;
+  //margin: -2px;
+}
+.testing{
+  color: #444;
+  background-color: rgb(230, 255, 196) !important;
+}
+* {
+  font-family: Arial;
+  box-sizing: border-box;
+}
+h2 {
+  color: #444;
+  font-weight: lighter;
+}
+body {
+  margin: 1em;
+}
+
+body,
+input[text],
+button {
+  color: #888;
+  // font-family: Cambria, Georgia;
+}
+button {
+  font-size: 14px;
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+  &:hover {
+    background-color: #cfd8dc;
+  }
+  &.delete-button {
+    float: right;
+    background-color: gray !important;
+    background-color: rgb(216, 59, 1) !important;
+    color: white;
+    padding: 4px;
+    position: relative;
+    font-size: 12px;
+  }
+  &.chosen {
+    background-color: gray !important;
+    background-color: rgb(26, 216, 1) !important;
+    color: white;
+    position: relative;
+  }
+  &:active {
+    color: rgb(240, 240, 240) !important;
+  }
+}
+div {
+  margin: .1em;
+}
+
+
+.paths {
+  WASfloat: left;
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  li {
+    cursor: pointer;
+    position: relative;
+    left: 0;
+    background-color: #eee;
+    margin: .5em;
+    padding: .5em;
+    height: 3.0em;
+    border-radius: 4px;
+    width: 17em;
+    &:hover {
+      color: #607d8b;
+      color: rgb(0, 120, 215);
+      background-color: #ddd;
+      left: .1em;
+    }
+    &.selected:hover {
+      /*background-color: #BBD8DC !important;*/
+      color: white;
+    }
+  }
+  .text {
+    position: relative;
+    top: -3px;
+  }
+  .saying {
+    margin: 5px 0;
+  }
+  .name {
+    font-weight: bold;
+  }
+  .badge {
+    /* display: inline-block; */
+    WASfloat: left;
+    font-size: small;
+    color: white;
+    padding: 0.7em 0.7em 0 0.5em;
+    background-color: #607d8b;
+    background-color: rgb(0, 120, 215);
+    background-color:rgb(134, 183, 221);
+    line-height: 1em;
+    position: relative;
+    left: -1px;
+    top: -4px;
+    height: 3.0em;
+    margin-right: .8em;
+    border-radius: 4px 0 0 4px;
+    width: 1.2em;
+  }
+}
+
+.header-bar {
+  background-color: rgb(0, 120, 215);
+  height: 4px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+label {
+  display: inline-block;
+  width: 4em;
+  margin: .5em 0;
+  color: #888;
+  &.value {
+    margin-left: 10px;
+    font-size: 14px;
+  }
+}
+
+input {
+  xxborder:0;outline:0;
+  height: 2em;
+  font-size: 1em;
+  padding-left: .4em;
+  &::placeholder {
+      color: lightgray;
+      font-weight: normal;
+      font-size: 12px;
+      letter-spacing: 3px;
+  }
+}
+
+.editarea {
+  wasfloat: left;
+  input {
+    margin: 4px;
+    height: 20px;
+    color: rgb(0, 120, 215);
+  }
+  button {
+    margin: 8px;
+  }
+  .editfields {
+    margin-left: 12px;
+  }
+
+
+}
+
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+
+}
+textarea {border:0;outline:0;font-size: 1em;}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+//  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 360px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -180px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.wrap {
+  white-space: pre-wrap;      /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap;     /* Opera <7 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  word-wrap: break-word;      /* IE */
+}
