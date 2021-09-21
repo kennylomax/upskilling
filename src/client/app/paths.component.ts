@@ -10,6 +10,7 @@ import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 
 import {CookieService} from 'ngx-cookie-service'
 
 import {parse, stringify} from 'flatted';
+import { InvokeMethodExpr } from '@angular/compiler';
 
 @Component({
   selector: 'app-paths',
@@ -17,6 +18,10 @@ import {parse, stringify} from 'flatted';
 })
 
 export class PathsComponent implements OnInit {
+  showBranches=false;
+  showTypes=false;
+  showTags=false;
+  showRecommenders=false;
   ipAddress = '';
   listlayout=false;
   editting=false;
@@ -41,6 +46,7 @@ export class PathsComponent implements OnInit {
   isDragging: boolean;
   searchTerm: string
   urlparams : any;
+  selectedPathIndex: number;
   selectedStep: Step;
   selectedStepId: string;
   newMaterialUrl: string;
@@ -101,6 +107,7 @@ export class PathsComponent implements OnInit {
       var stepsMap = new Map<String, Step>();
       var steps = stepsPaths["steps"]
       var paths = stepsPaths["paths"]
+      this.selectedPathIndex=-1;
 
       for (let p in paths){
         pathsMap.set (paths[p].uid, paths[p]);
@@ -164,7 +171,7 @@ export class PathsComponent implements OnInit {
         paths.push( value);
       })
       this.paths = paths;
-
+      this.selectedPathIndex=-1;
       this.typesArray = Array.from( typeSet );
       this.typesArray.sort()
       this.tagsArray  = Array.from( tagsSet );
@@ -183,21 +190,6 @@ export class PathsComponent implements OnInit {
     });
   }
 
-  toggleUrlStringParams(s:string){
-    this.clearAll();
-    let url = new URL(window.location.origin+s);
-    let params = new URLSearchParams(url.search);
-    params.getAll("f").forEach(
-      function(value, key) {
-         $( "button[name="+value+"]").trigger( "click" );
-      });
-
-    if (params.get("id")){
-      this.onSelect(params.get("id"), -1,'', "false");
-      $( "img[id='"+params.get("id")+"']").addClass("highlight");
-    }
-  }
-
   toggleUrlParams(url){
     // http://localhost:3000/?tags=a&tags=b&id=123123
     var args = url["f"];
@@ -213,8 +205,15 @@ export class PathsComponent implements OnInit {
     var ids = url["id"];
     if (!ids || Array.isArray(ids))
       return;
+    console.log("IN toggleUrlParams "+ids)
     this.onSelect(ids, -1,'', "false");
     $( "img[id='"+ids+"']").addClass("highlight");
+
+    
+    if (url["search"]){
+      this.searchTerm= url["search"];
+    }
+    this.toggleMe(null);
   }
 
   gatherUrlParams(){
@@ -230,6 +229,10 @@ export class PathsComponent implements OnInit {
           sep="&"
     });
 
+    if (this.searchTerm){
+      urlParams += sep+"search="+this.searchTerm;
+      sep="&"
+    }
     this.deepUrl = window.location.origin +urlParams
   }
 
@@ -253,6 +256,7 @@ export class PathsComponent implements OnInit {
     }
     if ( $( ".chosen").length==0 && (!this.searchTerm ||  this.searchTerm.length==0)){
       $("img[alt='refreshPage']").removeClass("img-opaque");
+      $( "code[name='path']").removeClass("testing");
       return;
     }
 
@@ -264,35 +268,46 @@ export class PathsComponent implements OnInit {
       });
     })
 
+    $( "code[name='path']").each(function( index ) {
+      $( this).removeClass("testing");
+    }
+  )
+
     if (this.searchTerm && this.searchTerm.length>0){
       let w = ""+this.searchTerm.toUpperCase()
       $( "img[alt='refreshPage']").each(function( index ) {
         if( $(this).attr("name").toUpperCase().includes( w )){
           $( this).removeClass("img-opaque");
         }
+        }
+      )
+
+      $( "code[name='path']").each(function( index ) {
+          if( $(this).attr("id").toUpperCase().includes( w ))
+            $( this).addClass("testing");
+        }
+      )
+
+      var stepWithUrl = this.steps.filter(h => h.Url == this.searchTerm);
+      if (stepWithUrl!=null && stepWithUrl.length>0){
+        this.selectedStep = stepWithUrl[0];
+        console.log( "img[id='img"+this.selectedStep.uid+"']" )
+        $("img[id='img"+this.selectedStep.uid+"']").removeClass("img-opaque");
       }
-    )
-
-    var stepWithUrl = this.steps.filter(h => h.Url == this.searchTerm);
-    if (stepWithUrl!=null && stepWithUrl.length>0){
-      this.selectedStep = stepWithUrl[0];
-      console.log( "img[id='img"+this.selectedStep.uid+"']" )
-      $("img[id='img"+this.selectedStep.uid+"']").removeClass("img-opaque");
     }
 
-    }
-
-
-      this.gatherUrlParams()
-      this.numChosenButtons = $( ".chosen").length;
+    this.gatherUrlParams()
+    this.numChosenButtons = $( ".chosen").length;
   }
 
   extractYouTubeDetails(youTubeURL, youTubeEndpoint) {
     let o = this.stepService.scrapeContent(youTubeEndpoint).subscribe(o => {
-      const obj = JSON.parse(o+"");
-      this.selectedStep.Title = obj.items[0].snippet.title;
-      this.selectedStep.Description = obj.items[0].snippet.description;
-      this.selectedStep.Thumb = obj.items[0].snippet.thumbnails.default.url;
+      console.log("HERE in extractYouTubeDetails " +o)
+      const obj = decodeURIComponent( JSON.parse(o+"").Content )
+      const obj2 = JSON.parse(obj)
+      this.selectedStep.Title = obj2.items[0].snippet.title;
+      this.selectedStep.Description = obj2.items[0].snippet.description;
+      this.selectedStep.Thumb = obj2.items[0].snippet.thumbnails.default.url;
       this.selectedStep.Url = youTubeURL;
       });
   }
@@ -361,6 +376,7 @@ export class PathsComponent implements OnInit {
 
   clearButtons(){
     $("button").removeClass("testing")
+    $("img").removeClass("highlight");
     if (!this.stepBeingEditted)
       this.selectedStep=null;
   }
@@ -382,11 +398,9 @@ export class PathsComponent implements OnInit {
         this.flashReturnField()
         return;
       }
-      if( !browsing &&  (this.addingStep || this.stepBeingEditted  || this.editting )){
-        
+      if( !browsing &&  (this.addingStep || this.stepBeingEditted  || this.editting )){  
         return;
       }
-
     }
 
     this.stepBeingEditted = browsing;
@@ -595,6 +609,11 @@ export class PathsComponent implements OnInit {
   }
 
   clearAll(){
+    this.showBranches = false;
+    this.showTags = false;
+    this.showTypes = false;
+    this.showRecommenders = false;
+    
     this.cancel();
     this.selectedStep=null;
     this.numChosenButtons=0;
@@ -602,6 +621,7 @@ export class PathsComponent implements OnInit {
     $("button").removeClass("chosen");
     $("button").removeClass("testing");
     $("img[alt='refreshPage']").removeClass("img-opaque");
+    $( "code[name='path']").removeClass("testing");
     this.gatherUrlParams();
   }
 

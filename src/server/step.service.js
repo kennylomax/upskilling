@@ -24,18 +24,22 @@ function scrapeContent(req, response) {
     if (res.statusCode !== 200) {
       console.error(`Did not get an OK from the server. Code: ${res.statusCode}`);
       res.resume();
+      response.status(200).json("{'Message':'NoDataAvailable'}");
       return;
     }
     let data = '';
     res.on('data', (chunk) => {
-      data += chunk;
+      data += chunk ;
     });
+  
     res.on('close', () => {
+      data = '{"Content": "'+ encodeURIComponent(data)+'" }'
       response.status(200).json(data);
     });
   });
+
   request.on('error', (e) => {
-    response.status(200).json("{}");
+    response.status(200).json("{'Message','NoDataAvailable'}");
   });
 }
 
@@ -249,7 +253,7 @@ function savePath(req, res) {
   console.log("AA" + origPath.Title)
   MongoPath.findOne({ uid: origPath.uid }, (error, path) => {
     if (path != null) {
-      console.log("BB " + origPath.Title)
+      console.log("BB " + origPath.Title + "Description "+ origPath.Description )
       path.Description = origPath.Description;
       path.StepIds = origPath.StepIds;
       path.Contact = origPath.Contact;

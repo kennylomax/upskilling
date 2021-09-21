@@ -8,9 +8,11 @@ img{
   border-color: transparent;
   border: solid 3px white;
 }
+.noHover{
+  pointer-events: none;
+}
 img:hover {
   border: solid 3px red;
-  //margin: -2px;
 }
 
 .cdk-drop-list-dragging {
@@ -18,7 +20,6 @@ img:hover {
 }
 .highlight {
   border: solid 3px red;
-  //margin: -2px;
 }
 .testing{
   color: #444;
