@@ -18,10 +18,10 @@ import { InvokeMethodExpr } from '@angular/compiler';
 })
 
 export class PathsComponent implements OnInit {
-  showBranches=false;
-  showTypes=false;
-  showTags=false;
-  showRecommenders=false;
+  showBranches=true;
+  showTypes=true;
+  showTags=true;
+  showRecommenders=true;
   ipAddress = '';
   listlayout=false;
   editting=false;
@@ -187,7 +187,10 @@ export class PathsComponent implements OnInit {
         this.selectedStep = steps[0];
       if (this.selectedStep)
         this.onSelect(this.selectedStep.uid, -1, this.selectedStep.Tags+" "+this.selectedStep.Type+" " +this.selectedStep.Tree+" " +this.selectedStep.Recommender, "false")
-    });
+    
+    console.log("HERE1")
+    
+      });
   }
 
   toggleUrlParams(url){
@@ -196,10 +199,15 @@ export class PathsComponent implements OnInit {
     if (args){
       if (!Array.isArray(args))
         args = new Array(args);
-      args.forEach(function( a, b ) {
-        a = a.replace( /(:|\.|\/|\[|\]|,|=|@)/g, "\\$1" );
-        $( "button[name="+a+"]").trigger( "click" );
+      args.forEach(function( a, b ) {       
+       document.getElementById(a).click();
       })
+    }
+    else {
+      this.showBranches=false;
+      this.showTypes=false;
+      this.showTags=false;
+      this.showRecommenders=false;
     }
 
     var ids = url["id"];
@@ -209,7 +217,6 @@ export class PathsComponent implements OnInit {
     this.onSelect(ids, -1,'', "false");
     $( "img[id='"+ids+"']").addClass("highlight");
 
-    
     if (url["search"]){
       this.searchTerm= url["search"];
     }
@@ -609,7 +616,7 @@ export class PathsComponent implements OnInit {
   }
 
   clearAll(){
-    this.showBranches = false;
+    this.showBranches = true;
     this.showTags = false;
     this.showTypes = false;
     this.showRecommenders = false;
