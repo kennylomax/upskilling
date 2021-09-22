@@ -218,9 +218,9 @@ export class PathsComponent implements OnInit {
     $( "img[id='"+ids+"']").addClass("highlight");
 
     if (url["search"]){
-      this.searchTerm= url["search"];
+      this.searchTerm = url["search"];
     }
-    this.toggleMe(null);
+//    this.toggleMe(null);
   }
 
   gatherUrlParams(){
@@ -426,6 +426,7 @@ export class PathsComponent implements OnInit {
       }
     );
     var candidate = this.stepsMap.get( id );
+    console.log("Candidate "+candidate)
     if (!candidate )
       return;
     this.addingStep = false;
