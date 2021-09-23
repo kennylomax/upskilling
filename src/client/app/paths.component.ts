@@ -220,7 +220,7 @@ export class PathsComponent implements OnInit {
     if (url["search"]){
       this.searchTerm = url["search"];
     }
-//    this.toggleMe(null);
+    this.applyAnySearch();
   }
 
   gatherUrlParams(){
@@ -280,7 +280,14 @@ export class PathsComponent implements OnInit {
     }
   )
 
-    if (this.searchTerm && this.searchTerm.length>0){
+    this.applyAnySearch()
+
+    this.gatherUrlParams()
+    this.numChosenButtons = $( ".chosen").length;
+  }
+
+  applyAnySearch(){
+      if (this.searchTerm && this.searchTerm.length>0){
       let w = ""+this.searchTerm.toUpperCase()
       $( "img[alt='refreshPage']").each(function( index ) {
         if( $(this).attr("name").toUpperCase().includes( w )){
@@ -302,9 +309,6 @@ export class PathsComponent implements OnInit {
         $("img[id='img"+this.selectedStep.uid+"']").removeClass("img-opaque");
       }
     }
-
-    this.gatherUrlParams()
-    this.numChosenButtons = $( ".chosen").length;
   }
 
   extractYouTubeDetails(youTubeURL, youTubeEndpoint) {
