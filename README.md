@@ -33,8 +33,8 @@ docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName
 
 RUN ON K8S
 ng b
-docker build -t kenlomax/pathsa:v0.107 .
-docker push kenlomax/pathsa:v0.107
+docker build -t kenlomax/pathsa:v0.109 .
+docker push kenlomax/pathsa:v0.109
 kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml  apply -f pathsadeploymentwithingress.yml
 
 GARDENER Link:

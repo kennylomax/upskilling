@@ -212,15 +212,16 @@ export class PathsComponent implements OnInit {
 
     var ids = url["id"];
     if (!ids || Array.isArray(ids))
-      return;
-    console.log("IN toggleUrlParams "+ids)
-    this.onSelect(ids, -1,'', "false");
-    $( "img[id='"+ids+"']").addClass("highlight");
-
+      {}
+    else {
+      console.log("IN toggleUrlParams "+ids)
+      this.onSelect(ids, -1,'', "false");
+      $( "img[id='"+ids+"']").addClass("highlight");
+    }
     if (url["search"]){
       this.searchTerm = url["search"];
+      this.applyAnySearch();
     }
-    this.applyAnySearch();
   }
 
   gatherUrlParams(){
