@@ -120,7 +120,6 @@ function getSteps(req, res) {
         .then(paths => {
           res.status(200).json({ "steps": steps, "paths": paths });
         });
-
     })
     .catch(error => {
       res.status(500).send(error);
@@ -157,6 +156,17 @@ function postStep(req, res) {
 
   if (!originalStep.uid || originalStep.uid.length==0)
     originalStep.uid = uuidv4();
+
+  if (
+    !originalStep.Title || originalStep.Title.length==0 ||
+    !originalStep.Url || originalStep.Url.length==0 ||
+    !originalStep.uid || originalStep.uid.length==0 
+    )
+  {
+    res.status(200).json({error:"FieldsMissing"});
+    console.log("originalStep: "+util.inspect(originalStep))
+    return;
+  }
 
   MongoStep.findOne({ uid: originalStep.uid }, (error, step) => {
     if (step != null) {
@@ -238,9 +248,7 @@ function checkFound(res, step) {
 }
 
 function savePath(req, res) {
-
   var testData = req.url.includes("?testing")
-
   const origPath = {
     uid: req.params.uid,
     Title: req.body.Title,
@@ -250,7 +258,6 @@ function savePath(req, res) {
     TestData: testData ? "True" : "False"
   };
 
-  console.log("AA" + origPath.Title)
   MongoPath.findOne({ uid: origPath.uid }, (error, path) => {
     if (path != null) {
       console.log("BB " + origPath.Title + "Description "+ origPath.Description )

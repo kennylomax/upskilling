@@ -2,7 +2,7 @@
     <table (keydown)="onKeydown( $event)" (keyup)="onKeyup( $event)" width=100%>
       <tr valign="top">
         <td  width=60% nowrap>
-          <h2>Crowdsourcing material for Upskilling in CX Commerce & Munich Labs</h2>
+          <h2>Crowdsourcing material for Upskilling in CX Commerce and Munich Labs.</h2>
           Mastering our Cloud Landscape is hard - but we can make it easier by sharing our favourite upskilling material and jouneys with each other. Here we can: <ul>
           <li>crowd source our favourite upskilling videos/sites/channels, </li>
           <li>like (or not) the material that others have shared, </li>
@@ -15,15 +15,18 @@
         </td>
         <td nowrap valign=top align=right>
           Search Material and Paths <input id=search name=search [(ngModel)]="searchTerm" placeholder="searchTerm" (keyup)="toggleMe(null)"  /><br>
-          <img height=50px src="assets/images/sap.jpeg"> <img src="assets/images/cx.png"><br>
+          <br>
           <button id="copyToClipboard" class="tooltip" (click)="copyToClipboard()" >Copy deeplink to clipboard
             <span class="tooltiptext">Get (and share) a URL with your current selections</span>
-          </button> <br>(v0.110)  <a target="_blank" href="https://wiki.wdf.sap.corp/wiki/display/prodandtech/Software+Academy+2021+Filling+our+Skills+Gaps">More about this</a>
-          <p>Questions/feedback? Contact ken.lomax@sap.com</p>
+          </button> 
 </td>
 <td>
   <a href="https://wiki.wdf.sap.corp/wiki/display/prodandtech/Software+Academy+2021+Filling+our+Skills+Gaps" ><img height="200px" alt="Contribute" src="assets/images/albert.png" /></a>
 </td>
+<td>
+  <img height=50px src="assets/images/sap.jpeg"> <img src="assets/images/cx.png">
+  <br>(v0.122)  <a target="_blank" href="https://wiki.wdf.sap.corp/wiki/display/prodandtech/Software+Academy+2021+Filling+our+Skills+Gaps">More about this</a>
+  <p>Questions/feedback?<br> Contact ken.lomax@sap.com</p></td>
       </tr>
 
 </table>
@@ -76,9 +79,9 @@
                       [cdkDragData]="stepsMap.get(stepId)"
                       (cdkDragStarted)="started($event)"
                       (cdkDragDropped)="stopped($event)">
-                         <img id="{{stepsMap.get(stepId).Title}}" valign=bottom
+                         <img id="{{stepsMap.get(stepId) ? stepsMap.get(stepId).Title : 'NotDefined'}}" valign=bottom
                          (mouseenter)="onSelect(stepId, -1, '', false)"  src="{{stepsMap.get(stepId)?stepsMap.get(stepId).Thumb:'assets/images/gray.png'}}"
-                         (click)='onSelect(stepId, i, stepsMap.get(stepId).Tags+" "+stepsMap.get(stepId).Type+" " +stepsMap.get(stepId).Tree+" " +stepsMap.get(stepId).Recommender, true)'
+                         (click)='clearAll();onSelect(stepId, i, stepsMap.get(stepId).Tags+" "+stepsMap.get(stepId).Type+" " +stepsMap.get(stepId).Tree+" " +stepsMap.get(stepId).Recommender, true)'
                          width=30 height=30>
                       </code>
                     </span>
@@ -101,13 +104,13 @@
 <table>
   <tr valign=top>
     <td width=200px> <h3>Crowdsourced Material   
-         <img id="add2" *ngIf="!stepBeingEditted" (click)="editting=true" (mouseup)="addStepClicked()" src="assets/images/add.png"  height=30 >
+         <img id="add2" *ngIf="!stepBeingEditted" (click)="editting=true;addStepClicked()" src="assets/images/add.png"  height=30 >
       </h3>
       Filter by: 
-      <u id="filterBranches" (mouseup)="showBranches=!showBranches">Branches</u>&nbsp; 
-      <u id="filterTags"  (mouseup)="showTags=!showTags">Tags</u>	&nbsp; 
-      <u id="filterTypes"  (mouseup)="showTypes=!showTypes">Types</u>	&nbsp; 
-      <u id="filterRecommenders" (mouseup)="showRecommenders=!showRecommenders">Recommenders </u>&nbsp; 
+      <u id="filterBranches" (click)="showBranches=!showBranches">Branches</u>&nbsp; 
+      <u id="filterTags"  (click)="showTags=!showTags">Tags</u>	&nbsp; 
+      <u id="filterTypes"  (click)="showTypes=!showTypes">Types</u>	&nbsp; 
+      <u id="filterRecommenders" (click)="showRecommenders=!showRecommenders">Recommenders </u>&nbsp; 
 
       <span id="clearAll"><u id="clearAllFilters"  role="button" (click)="clearAll()">Clear all filters</u></span><br>
       <table>
@@ -192,7 +195,6 @@
          <span *ngFor="let fb of feedback" >{{fb}}<br></span>
         </td>
       </tr>
-
       <tr *ngIf="selectedStep">
         <td>
           <table>
@@ -204,7 +206,7 @@
                   <img *ngIf="editting"  alt="Save" (click)="save()" src="assets/images/save2.png"  height=30 >
                   <img *ngIf="editting &&  !addingStep" alt="Delete" (click)="deleteStep()" src="assets/images/bin.png"  height=30 >
                   <img  id="undo"  *ngIf="editting" alt="Readonly mode"  (click)="cancel()"  src="assets/images/undo.png"  height=30 >
-                  {{selectedStep.Title.substring(0,80)}}</h3>
+                  <a target="_blank"  href="{{ selectedStep.Url }}">{{selectedStep.Title ? selectedStep.Title.substring(0,80): "No Title"}} <img height=30 src="assets/images/open.png"></a></h3>
               </td>
             </tr>
             <tr nowrap *ngIf="!editting" >
@@ -246,7 +248,7 @@
               <td> <a class="align-top" target="_blank" href="{{ selectedStep.Url }}">URL</a><sup>*</sup>:<br><br></td>
               <td colspan=2 valign=top>
                 <input id="url3" *ngIf="editting" (keyup)="editted( $event)" [attr.disabled]="!editting ? '': null" size="50" [(ngModel)]="selectedStep.Url" placeholder="Url" />
-                <div  *ngIf="!editting"> <a class="align-top" target="_blank" href="{{ selectedStep.Url }}">{{ selectedStep.Url }}</a> </div>
+                <div  *ngIf="!editting"> <a class="align-top" target="_blank" href="{{ selectedStep.Url }}">{{ selectedStep.Url }} </a> </div>
               </td>
             </tr>
 
@@ -318,6 +320,10 @@
     <td><img class='noHover' src="assets/images/whitebar.png"></td>
   </tr>
 </table>
+<p (click)="showjson=!showjson">Show json?</p> 
+<span id=stepsjson *ngIf="showjson">{{steps| json}}</span>
+<span id=pathsjson *ngIf="showjson">{{paths| json}}</span>
+
 </div>
 
 

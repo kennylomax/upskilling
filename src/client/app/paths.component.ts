@@ -159,14 +159,18 @@ export class PathsComponent implements OnInit {
         }
       }
       steps = []
-      const mapSortedByTitle = new Map([...stepsMap.entries()].sort((a, b) => a[1].Title.localeCompare( b[1].Title)));
+
+      const mapSortedByTitle = new Map([...stepsMap.entries()].sort((a, b) => 
+        a[1].Title && b[1].Title ? a[1].Title.localeCompare( b[1].Title) : 0 ));
       mapSortedByTitle.forEach( function f(value, key, map) {
         steps.push( value);
       })
       this.steps = steps;
 
       paths = []
-      const mapSortedByName = new Map([...pathsMap.entries()].sort((a, b) => a[1].Title.localeCompare( b[1].Title)));
+      const mapSortedByName = new Map([...pathsMap.entries()].sort((a, b) => 
+        a[1].Title && b[1].Title ? a[1].Title.localeCompare( b[1].Title) : 0 ));
+
       mapSortedByName.forEach( function f(value, key, map) {
         paths.push( value);
       })
@@ -185,10 +189,11 @@ export class PathsComponent implements OnInit {
 
       if (selectStepOnCompletion)
         this.selectedStep = steps[0];
-      if (this.selectedStep)
+      if (this.selectedStep){
+        console.log("HERE1")
         this.onSelect(this.selectedStep.uid, -1, this.selectedStep.Tags+" "+this.selectedStep.Type+" " +this.selectedStep.Tree+" " +this.selectedStep.Recommender, "false")
+    }
     
-    console.log("HERE1")
     
       });
   }
@@ -227,7 +232,7 @@ export class PathsComponent implements OnInit {
   gatherUrlParams(){
     var urlParams=""
     var sep = "?";
-    if (this.selectedStepId){
+    if (this.selectedStep){
       urlParams += sep+"id="+this.selectedStepId;
       sep="&"
     }
@@ -282,14 +287,16 @@ export class PathsComponent implements OnInit {
   )
 
     this.applyAnySearch()
-
     this.gatherUrlParams()
     this.numChosenButtons = $( ".chosen").length;
   }
 
   applyAnySearch(){
+    console.log("h1 this.selectedStep "+this.selectedStep)
       if (this.searchTerm && this.searchTerm.length>0){
-      let w = ""+this.searchTerm.toUpperCase()
+        $("img[alt='refreshPage']").addClass("img-opaque");   
+        let w = ""+this.searchTerm.toUpperCase()   
+      console.log("applyAnySearch2 "+this.searchTerm)
       $( "img[alt='refreshPage']").each(function( index ) {
         if( $(this).attr("name").toUpperCase().includes( w )){
           $( this).removeClass("img-opaque");
@@ -306,7 +313,7 @@ export class PathsComponent implements OnInit {
       var stepWithUrl = this.steps.filter(h => h.Url == this.searchTerm);
       if (stepWithUrl!=null && stepWithUrl.length>0){
         this.selectedStep = stepWithUrl[0];
-        console.log( "img[id='img"+this.selectedStep.uid+"']" )
+        console.log( "assigning selectStep img[id='img"+this.selectedStep.uid+"']" )
         $("img[id='img"+this.selectedStep.uid+"']").removeClass("img-opaque");
       }
     }
@@ -393,6 +400,10 @@ export class PathsComponent implements OnInit {
       this.selectedStep=null;
   }
 
+  test( a: any){
+    console.log("In test "+a)
+  }
+
   onSelect(id: any, index: number, name:String, browsing: any) {
     var classOfImg =  ""+$("img[id='img"+id+"']" ).attr("class")
 
@@ -436,6 +447,8 @@ export class PathsComponent implements OnInit {
       return;
     this.addingStep = false;
     this.selectedStep = candidate;
+
+     console.log("ASSIGNIN STEPID "+id)
     this.selectedStepId=id
     this.newMaterialUrl=""
     this.dateOfSelectedStep=new Date(candidate.DateMS).toLocaleDateString("en-US")
@@ -528,6 +541,8 @@ export class PathsComponent implements OnInit {
     this.stepService.addStep(this.selectedStep).subscribe(
       o => {
         console.log("AddStep output" + JSON.stringify(o))
+        console.log("ASSIGNIN STEPID2 "+o.uid)
+
         this.selectedStepId = o.uid;
         this.selectedStep.uid = o.uid;
 
@@ -622,7 +637,7 @@ export class PathsComponent implements OnInit {
   }
 
   clearAll(){
-    this.showBranches = true;
+    this.showBranches = false;
     this.showTags = false;
     this.showTypes = false;
     this.showRecommenders = false;
