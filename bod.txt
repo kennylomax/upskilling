@@ -1,0 +1,187 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "cni.projectcalico.org/podIP": "100.96.0.7/32",
+            "cni.projectcalico.org/podIPs": "100.96.0.7/32",
+            "kubernetes.io/psp": "gardener.privileged"
+        },
+        "creationTimestamp": "2022-02-12T02:18:00Z",
+        "generateName": "pathsadeployment-77fd877687-",
+        "labels": {
+            "app": "myapp",
+            "pod-template-hash": "77fd877687"
+        },
+        "name": "pathsadeployment-77fd877687-99bm8",
+        "namespace": "default",
+        "ownerReferences": [
+            {
+                "apiVersion": "apps/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "ReplicaSet",
+                "name": "pathsadeployment-77fd877687",
+                "uid": "0beaee5d-6092-4af5-9a97-20c69559519c"
+            }
+        ],
+        "resourceVersion": "108627590",
+        "uid": "a9e69854-7f9e-4dac-a0e8-79975d387e08"
+    },
+    "spec": {
+        "containers": [
+            {
+                "env": [
+                    {
+                        "name": "youtubeapikey",
+                        "value": "AIzaSyCpyyL6Lf3UvkMfDC_j7X7hApxdA7WHFuI"
+                    },
+                    {
+                        "name": "mongokey",
+                        "value": "9lZoPFxW0AquHoH467o4inl0NkWTFHajWPiISLaIRHOvKsTx1MLpEHHWVMqahYN6DES6yY11f34yCIcr6yP5rA=="
+                    },
+                    {
+                        "name": "azurestorageimageaccount",
+                        "value": "testingaccesstorage"
+                    },
+                    {
+                        "name": "azurestorageimageaccountkey",
+                        "value": "HVMZNgL+thA4DwEeknc8N+F09OvT5D/PuG7+2PZHDJ5tUmvTiGsO8WuUOyCJzgNhdQA890O2hu+Vd8PWP6c8kQ=="
+                    },
+                    {
+                        "name": "azurestorageimageacontainername",
+                        "value": "upskillingimages"
+                    },
+                    {
+                        "name": "accountName",
+                        "value": "paths3"
+                    },
+                    {
+                        "name": "mongoDatabaseName",
+                        "value": "paths"
+                    },
+                    {
+                        "name": "mongoport",
+                        "value": "10255"
+                    },
+                    {
+                        "name": "azurestorageimageconnectionstring",
+                        "value": "DefaultEndpointsProtocol=https;AccountName=testingaccesstorage;AccountKey=HVMZNgL+thA4DwEeknc8N+F09OvT5D/PuG7+2PZHDJ5tUmvTiGsO8WuUOyCJzgNhdQA890O2hu+Vd8PWP6c8kQ==;EndpointSuffix=core.windows.net"
+                    },
+                    {
+                        "name": "KUBERNETES_SERVICE_HOST",
+                        "value": "api.q40tlog33j.klxtrial.internal.canary.k8s.ondemand.com"
+                    }
+                ],
+                "image": "kenlomax/pathsa:v0.126",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "myapp",
+                "ports": [
+                    {
+                        "containerPort": 3000,
+                        "protocol": "TCP"
+                    }
+                ],
+                "resources": {},
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "default-token-ljl8s",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "shoot--klxtrial--q40tlog33j-worker-r7cg8-z1-5f548-6gcbd",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Always",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "default-token-ljl8s",
+                "secret": {
+                    "defaultMode": 420,
+                    "secretName": "default-token-ljl8s"
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2022-02-12T04:21:31Z",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2022-02-12T04:22:58Z",
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2022-02-12T04:22:58Z",
+                "status": "True",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2022-02-12T04:21:31Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "containerID": "docker://e2799c99c6c479e2c0ba6c69437535e949f1dc28c08b133e741b86d719ec9342",
+                "image": "kenlomax/pathsa:v0.126",
+                "imageID": "docker-pullable://kenlomax/pathsa@sha256:3110c903fd7f2d3d11747256ebb63b7b856eb7e22bb63a1b458f0d9680652713",
+                "lastState": {},
+                "name": "myapp",
+                "ready": true,
+                "restartCount": 0,
+                "started": true,
+                "state": {
+                    "running": {
+                        "startedAt": "2022-02-12T04:22:58Z"
+                    }
+                }
+            }
+        ],
+        "hostIP": "10.250.0.50",
+        "phase": "Running",
+        "podIP": "100.96.0.7",
+        "podIPs": [
+            {
+                "ip": "100.96.0.7"
+            }
+        ],
+        "qosClass": "BestEffort",
+        "startTime": "2022-02-12T04:21:31Z"
+    }
+}

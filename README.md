@@ -1,12 +1,12 @@
 Crowdsourced Upsklling App for SAPCX/SAP Munich Labs
 =====
-See https://cxwiki.sap.com/display/prodandtech/Software+Academy+2021+Filling+our+Skills+Gaps
+See https://wiki.wdf.sap.corp/wiki/display/prodandtech/Crowdsourced+Upskilling+App
 
 
-To run/develop locally:
-=====
-Set up mongo connection and storage data
-./setenvvars.sh:
+## To run/develop locally:
+
+- Set up mongo connection and storage data in ./setenvvars.sh:
+```
 export accountName="paths3"
 export mongokey="9lZo...=="
 export mongoDatabaseName="paths"
@@ -16,52 +16,42 @@ export azurestorageimageaccount="testingaccesstorage"
 export azurestorageimageaccountkey="HVMZN...kQ=="
 export azurestorageimageacontainername="upskillingimages"
 export azurestorageimageconnectionstring="DefaultEndpointsProtocol=https;...=core.windows.net"
+```
+- personalize then source ./setenvvars.sh: **source ./setenvvars.sh**
+- install npm modules: **npm install**
+- build npm application: **ng b**
+- run the server: **node src/server/index.js**
+- access the site @ **localhost:3000**
+
+## To run locally on docker
+- build docker image: **docker build -t kenlomax/pathsa:v0.127nb g .**
+- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.127**
+
+## To Run on Gardener, Converged Cloud:
+- Push to docker hub: **docker push kenlomax/pathsa:v0.127**
+- View Gardener K8s Cluster @ https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/
+- View your SAP Converged Cloud @ **https://dashboard.eu-nl-1.cloud.sap/monsoon3/sapcxacademy/home**
+- Either ..
+  - Get your kube config from Gardener @ https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/
+  - Deploy to your k8s cluster: **kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml  apply -f pathsadeploymentwithingress.yml**
+- or, 
+  - adjust deployment file directly in Gardener
+- More on only.sap websites @ https://documentation.global.cloud.sap/networking/dns#internal-sap-hosted-zones
+- More on DNS config @ https://documentation.global.cloud.sap/networking/dns-start-create-dns-zone
+- CONVERGED CLOUD Links: https://dashboard.eu-nl-1.cloud.sap/monsoon3/home, https://dashboard.eu-nl-1.cloud.sap/monsoon3/sapcxacademy/home
+- Redirect your DNS entry to point crowdsourced.upskilling.only.sap to the deployed app's URL
 
 
-# SAP CX Learning Paths
-SET ENV VARS
-source ./setenvvars.sh
-
-BUILD
-ng b
-
-RUN AS ANGULAR APP
-node src/server/index.js
-
-RUN LOCALLY ON DOCKER
-docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername dockerimage
-
-RUN ON K8S
-ng b
-docker build -t kenlomax/pathsa:v0.122 .
-docker push kenlomax/pathsa:v0.122
-kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml  apply -f pathsadeploymentwithingress.yml
-
-GARDENER Link:
-https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/
-
-CONVERGED CLOUD Links:
-https://dashboard.eu-nl-1.cloud.sap/monsoon3/home
-https://dashboard.eu-nl-1.cloud.sap/monsoon3/sapcxacademy/home
-Redirect your DNS entry to point crowdsourced.upskilling.only.sap to the deployed app's URL
-
-DEPLOY AS K8S
-A place for crowd sourcing the best material for SAPCX upskilling, with material recommended from our engineers.
-
-[Based on this tutorial](https://docs.microsoft.com/en-gb/azure/cosmos-db/tutorial-develop-mongodb-nodejs)
-
-
-To get HTTPS Certificate for Ingress in k8s yaml:
-Get certificate csr and key:
+## To get HTTPS Certificate for Ingress in k8s yaml:
+- Get certificate csr and key:
  openssl req -new -newkey rsa:2048 -nodes \
         -out tls.csr \
         -keyout tls.key \
         -subj "/C=DE/L=GCP/O=SAP/OU=CX Academy/CN=crowdsourced.upskilling.only.sap"
 
-Get Certificate by pasting csr file into  https://getcerts.wdf.global.corp.sap/pgwy/request/sapnetca_base64.html
+- Get Certificate by pasting csr file into  https://getcerts.wdf.global.corp.sap/pgwy/request/sapnetca_base64.html
 -> /Users/d061192/Siggy
-
-Create K8s Secret with key and crt files :
+- Create K8s Secret with key and crt files :
 kubectl  --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml create secret tls crowdsourcedsecret-tls --key="tls.key" --cert="tls.crt"
 kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml get secrets 
 kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml get secret crowdsourcedsecret-tls -o yaml
