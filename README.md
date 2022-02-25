@@ -24,12 +24,17 @@ export azurestorageimageconnectionstring="DefaultEndpointsProtocol=https;...=cor
 - access the site @ **localhost:3000**
 
 ## To run locally on docker
-- build docker image: **docker build -t kenlomax/pathsa:v0.127nb g .**
-- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.127**
+- build project: **ng b**
+- build docker image: **docker build -t kenlomax/pathsa:v0.130 .**
+- push docker image: **docker push kenlomax/pathsa:v0.130 **
+- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.130**
 
 ## To Run on Gardener, Converged Cloud:
-- Push to docker hub: **docker push kenlomax/pathsa:v0.127**
-- View Gardener K8s Cluster @ https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/
+- Push to docker hub: **docker push kenlomax/pathsa:v0.128**
+- View Gardener K8s Cluster @ https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/ and the k8s dashboard links
+- Open Gardener K8s Dashboard: 
+  - kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml  proxy
+  - http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 - View your SAP Converged Cloud @ **https://dashboard.eu-nl-1.cloud.sap/monsoon3/sapcxacademy/home**
 - Either ..
   - Get your kube config from Gardener @ https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/

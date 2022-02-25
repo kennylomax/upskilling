@@ -25,7 +25,7 @@
 </td>
 <td>
   <img height=50px src="assets/images/sap.jpeg"> <img src="assets/images/cx.png">
-  <br>(v0.127)  <a target="_blank" href="https://wiki.wdf.sap.corp/wiki/display/prodandtech/Software+Academy+2021+Filling+our+Skills+Gaps">More about this</a>
+  <br>(v0.130)  <a target="_blank" href="https://wiki.wdf.sap.corp/wiki/display/prodandtech/Software+Academy+2022+Filling+our+Skills+Gaps">More about this</a>
   <p>Questions/feedback?<br> Contact ken.lomax@sap.com</p></td>
       </tr>
 
@@ -39,6 +39,9 @@
         <img id="add1" *ngIf="edittingPaths" alt="Add"  (click)="newPath()" src="assets/images/add.png"  height=30 >
         <img id="save1" *ngIf="edittingPaths" alt="Add"  (click)="savePaths()" src="assets/images/save2.png"  height=30 >
         <img id="undo1" *ngIf="edittingPaths" alt="Readonly"  (click)="edittingPaths=false"  src="assets/images/undo.png"  height=30 >
+        
+        <a *ngIf="selectedStep" target="_blank"  href="{{ selectedStep.Url }}">{{selectedStep.Title ? selectedStep.Title.substring(0,80): "No Title"}} <img height=30 src="assets/images/open.png"></a>
+
         </h3>
       <table>
         <tr *ngIf="edittingPaths">
