@@ -25,9 +25,9 @@ export azurestorageimageconnectionstring="DefaultEndpointsProtocol=https;...=cor
 
 ## To run locally on docker
 - build project: **ng b**
-- build docker image: **docker build -t kenlomax/pathsa:v0.130 .**
-- push docker image: **docker push kenlomax/pathsa:v0.130 **
-- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.130**
+- build docker image: **docker build -t kenlomax/pathsa:v0.131 .**
+- push docker image: **docker push kenlomax/pathsa:v0.131 **
+- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.131**
 
 ## To Run on Gardener, Converged Cloud:
 - Push to docker hub: **docker push kenlomax/pathsa:v0.128**
