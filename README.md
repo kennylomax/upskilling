@@ -17,6 +17,7 @@ export azurestorageimageaccountkey="HVMZN...kQ=="
 export azurestorageimageacontainername="upskillingimages"
 export azurestorageimageconnectionstring="DefaultEndpointsProtocol=https;...=core.windows.net"
 ```
+
 - personalize then source ./setenvvars.sh: **source ./setenvvars.sh**
 - install npm modules: **npm install**
 - build npm application: **ng b**
@@ -25,12 +26,12 @@ export azurestorageimageconnectionstring="DefaultEndpointsProtocol=https;...=cor
 
 ## To run locally on docker
 - build project: **ng b**
-- build docker image: **docker build -t kenlomax/pathsa:v0.131 .**
-- push docker image: **docker push kenlomax/pathsa:v0.131 **
-- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.131**
+- build docker image: **docker build -t kenlomax/pathsa:v0.133 .**
+- push docker image: **docker push kenlomax/pathsa:v0.133 **
+- run on docker: **docker run -p3000:3000 --env accountName --env  mongokey --env mongoDatabaseName --env mongoport --env youtubeapikey --env  azurestorageimageaccount --env azurestorageimageaccountkey --env azurestorageimageacontainername kenlomax/pathsa:v0.133**
 
 ## To Run on Gardener, Converged Cloud:
-- Push to docker hub: **docker push kenlomax/pathsa:v0.128**
+- Push to docker hub: **docker push kenlomax/pathsa:v0.133**
 - View Gardener K8s Cluster @ https://dashboard.garden.canary.k8s.ondemand.com/namespace/garden-klxtrial/shoots/ and the k8s dashboard links
 - Open Gardener K8s Dashboard: 
   - kubectl --kubeconfig /Users/d061192/Downloads/kubeconfig--klxtrial--q40tlog33j.yaml  proxy
